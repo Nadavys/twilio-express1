@@ -3,33 +3,19 @@
  */
 
 var makeCall = function(phonenumber){
+    console.log("attempt to call" + phonenumber)
+    client.makeCall({
+        to: phonenumber,
+        from: config.from,
+        url: '/say'
 
-    var phone = client.getPhoneNumber(config.from);
-    phone.makeCall('phonenumber', null, function(call) {
-        console.log('Making Call to '+ phonenumber);
-        // 'call' is an OutgoingCall object. This object is an event emitter.
-        // It emits two events: 'answered' and 'ended'
-        call.on('answered', function(reqParams, res) {
+    }, function(err, responseData) {
 
-            // reqParams is the body of the request Twilio makes on call pickup.
-            // For instance, reqParams.CallSid, reqParams.CallStatus.
-            // See: http://www.twilio.com/docs/api/2010-04-01/twiml/twilio_request
-            // res is a Twiml.Response object. This object handles generating
-            // a compliant Twiml response.
+        //executed when the call has been initiated.
+        console.log("error: " +err , " responseData: " +responseData); // outputs "+14506667788"
 
-            console.log('Call answered');
-
-            // We'll append a single Say object to the response:
-            res.append(new Twiml.Say('Hello, there!'));
-
-            // And now we'll send it.
-            res.send();
-        });
-
-        call.on('ended', function(reqParams) {
-            console.log('Call ended');
-        });
-    })};
+    });
+};
 
 ///-----
 
@@ -77,6 +63,16 @@ app.get('/submitPhase1', function(req, res) {
   )
 });
 
+app.get('/say', function(req, res) {
+    var resp = new twilio.TwimlResponse();
+    var output = []
+    var number = parseInt(req.query.Digits)
+    output.push(FizzBuzz.fizzBuzzLoop(number));
+
+    resp.say(output.join(' '));
+    res.set('Content-Type', 'text/xml');
+    res.send(resp.toString());
+});
 
 app.listen(app.get('port'), function() {
   console.log("Node app is running at localhost:" + app.get('port'))
