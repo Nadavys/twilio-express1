@@ -3,15 +3,16 @@
     "version":"0.0.1",
     "private":false,
     "scripts":{
-        "start":"node app"
+        "start":"node app2"
     },
     "dependencies":{
     "express": "^4.0.0",
-        "ejs":"*",
+    "jade": "*",
+    "stylus": "*",
         "twilio":"git://github.com/kwhinnery/twilio-node.git"
     },
     "engines": {
-        "node": "0.8.x",
+        "node": "*",
         "npm": "1.1.x"
     }
 }

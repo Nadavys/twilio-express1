@@ -1,0 +1,16 @@
+extends ../layout
+
+block content
+	div.container
+		h1 PhoneBuzz App
+		p Enter Destination
+
+	div.container
+		form(role="form" action="/submitPhase1")
+			div.form-group
+				<label for="exampleInputEmail1">Email address</label>
+				input.form-control(type="text", name="phonenumber" placeholder="Enter Phone Number" value="#{to}")
+
+			<button type="submit" class="btn btn-large btn-primary">Submit</button>
+
+
