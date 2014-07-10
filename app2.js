@@ -2,11 +2,11 @@
  * Module dependencies.
  */
 
-var makeCall = function(){
+var makeCall = function(phonenumber){
 
     var phone = client.getPhoneNumber(config.from);
-    phone.makeCall('+1xxx', null, function(call) {
-
+    phone.makeCall('phonenumber', null, function(call) {
+        console.log('Making Call to '+ phonenumber);
         // 'call' is an OutgoingCall object. This object is an event emitter.
         // It emits two events: 'answered' and 'ended'
         call.on('answered', function(reqParams, res) {
@@ -70,7 +70,8 @@ app.get('/', function(req, res) {
 });
 
 app.get('/submitPhase1', function(req, res) {
-    var phonenumber = req.query.phonenumber
+    var phonenumber = req.query.phonenumber;
+     makeCall(phonenumber);
      res.render('phase2/submitPhase1',
   {  phonenumber: phonenumber }
   )
