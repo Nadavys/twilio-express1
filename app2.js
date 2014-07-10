@@ -33,7 +33,7 @@ var makeCall = function(){
 
 ///-----
 
-require('./fizzBuzz.js');
+require('./FizzBuzz.js');
 
 var express = require('express'),
     path = require('path'),
