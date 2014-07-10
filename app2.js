@@ -7,13 +7,13 @@ var makeCall = function(phonenumber){
     client.makeCall({
         to: phonenumber,
         from: config.from,
-        url: '/say'
+        url: config.url+'/say'
 
     }, function(err, responseData) {
 
         //executed when the call has been initiated.
-        console.log("error: " +err , " responseData: " +responseData); // outputs "+14506667788"
-
+        // console.log("error: " +err , " responseData: " +responseData); // outputs "+14506667788"
+        console.log('connection : %j', arguments);
     });
 };
 
@@ -47,7 +47,7 @@ else {
     config = require('./config');
 }
 
-var client = new twilio.RestClient('ACCOUNT_SID', 'AUTH_TOKEN')
+var client = new twilio.RestClient(config.accountSid, config.authToken)
 
 app.get('/', function(req, res) {
      res.render('phase2/index',
