@@ -3,7 +3,6 @@
  */
 module.exports = {
     phase1: function(req, res) {
-
         res.set('Content-Type', 'text/xml');
         res.send(queryFizzBuzzDigits());
     },

@@ -1,0 +1,17 @@
+extends ../layout
+
+block content
+	div.container
+		h1 PhoneBuzz App
+		p Enter Destination
+
+	div.container
+		form(role="form" action="/submitPhase3")
+			div.form-group
+				label(for="phonenumber") Email address
+				input.form-control(type="text", name="phonenumber", placeholder="Enter Phone Number" value="#{to}")
+				label(for="delay") Timed delay in seconds
+				input.form-control(type="text", name="delay", placeholder="Delay")
+			button.btn.btn-large.btn-primary(type="submit") Submit
+
+

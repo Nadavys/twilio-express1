@@ -94,6 +94,28 @@ var phase2 = {
         });
     }
 };
+////
+
+
+var phase3 = {
+    phase3: function(req, res) {
+        res.render('phase3/index',
+            {  to: config.to }
+        )
+    },
+    submitPhase3: function(req, res) {
+        var phonenumber = req.query.phonenumber;
+        var delay = req.query.delay;
+        var delayMillisecond = parseInt(delay) * 1000
+
+        setTimeout(function(){phase2.makeCall(phonenumber)}, delayMillisecond);
+
+        res.render('phase3/submit',
+            {  phonenumber: phonenumber, delay:  req.query.delay}
+        )
+    }
+};
+
 /////
 //phase1
 app.get('/phase1', phase1.phase1)
@@ -103,8 +125,11 @@ app.get('/doFizzbuzz', phase1.doFizzbuzz)
 //phase2
 app.get('/phase2', phase2.phase2)
 app.get('/submitPhase2', phase2.submitPhase2)
-app.get('/phase2InitFizzBizz',phase2.phase2InitFizzBizz)
+app.post('/phase2InitFizzBizz',phase2.phase2InitFizzBizz)
 
+//phase3
+app.get('/phase3', phase3.phase3)
+app.get('/submitPhase3', phase3.submitPhase3)
 
 app.listen(app.get('port'), function() {
   console.log("Node app is running at localhost:" + app.get('port'))
