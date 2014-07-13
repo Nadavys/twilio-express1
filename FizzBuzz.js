@@ -1,4 +1,4 @@
-var FizzBuzz = {
+module.exports = {
      processFizzBuzzLogic: function( num ){
         var retVal;
         // FizzBuzz Logic
@@ -18,7 +18,7 @@ var FizzBuzz = {
     fizzBuzzLoop: function(total){
         var retVal = []
         for (var i = 1; i <= total; i++) {
-            retVal.push(processFizzBuzzLogic(i));
+            retVal.push(this.processFizzBuzzLogic(i));
         }
         return retVal.join(' ')
     }
