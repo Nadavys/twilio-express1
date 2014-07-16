@@ -7,7 +7,9 @@
     },
     "dependencies":{
     "express": "^4.0.0",
+    "mongodb" : "*" ,
     "jade": "*",
+    "q":"*",
     "stylus": "*",
         "twilio":"git://github.com/kwhinnery/twilio-node.git"
     },
