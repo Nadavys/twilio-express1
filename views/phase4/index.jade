@@ -21,11 +21,13 @@ block content
 				tr
 					th Phone Number
 					th Delay In Seconds
+					th Target Number
 					th
 					each row, i in twilioLog
 						tr
 						td #{row.phonenumber}
 						td #{row.delay}
+						td #{row.number}
 						td 
 							a.btn.btn-primary 
 								span.glyphicon.glyphicon-repeat
