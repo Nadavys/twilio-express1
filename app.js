@@ -11,6 +11,7 @@ var express = require('express'),
 
 var app = express();
 var Q = require("q");
+var ObjectID=require('mongodb').ObjectID;
 
 app.set('view engine', 'jade');
 app.set('views', __dirname + '/views')
@@ -40,8 +41,9 @@ var TwillioLog = {
     create: function(newEntry){
         var deferred = Q.defer();
         this.collection().then(function(collection){
-            collection.insert(newEntry, function(err,row){
-                deferred.resolve(row._id);
+            console.log(arguments)
+            collection.insert(newEntry, function(err,rows){
+                deferred.resolve(rows[0]);
             })
         });
         return deferred.promise;
@@ -59,7 +61,7 @@ var TwillioLog = {
     update: function(id, number){
 
         this.collection().then(function(collection){
-            collection.update( { id: id },
+            collection.update( { id: ObjectID(id) },
                 { $set: {
                     number: number
                 }
@@ -71,6 +73,16 @@ var TwillioLog = {
         this.collection().then(function(collection){
             collection.remove(function(){})
             })
+    },
+    get: function(id){
+        var deferred = Q.defer();
+        this.collection().then(function(collection){
+            var x = collection.findOne({_id:ObjectID(id)} , function(err, item){
+                console.log("item: ", item)
+                deferred.resolve(item);
+            })
+        })
+        return deferred.promise;
     }
 //
 }
@@ -180,10 +192,14 @@ var phase4 = {
 //            console.log('responseData : %j', arguments );
 //        })
 //
+       // TwillioLog.get('53c75745fa108ba54c75bee1')
+
 //        var newEntry = {'phonenumber':'qwerty', delay: 9999191919};
 //        TwillioLog.create(newEntry)
         TwillioLog.list().then(function(twilioLog){
-//                console.log(twilioLog)
+               // console.log(twilioLog[0]._id)
+
+//
             res.render('phase4/index',
                 {  to: config.to, twilioLog: twilioLog });
         });
@@ -206,10 +222,16 @@ var phase4 = {
         res.send(phase4.queryFizzBuzzDigits(id));
     },
     makeCall: function(row){
+        var url
+        if(typeof row['number'] !== 'undefined'){
+            url = config.url+'/doFizzbuzz4?id='+id
+        }else{
+            url = config.url+'/phase4InitFizzBizz?id='+row._id
+        }
         client.makeCall({
             to: row.phonenumber,
             from: config.from,
-            url: config.url+'/phase4InitFizzBizz?id='+row._id
+            url: url
 
         }, function(err, responseData) {
 
@@ -219,7 +241,7 @@ var phase4 = {
         });
     },
     doFizzbuzz: function(req, res) {
-
+        var id = req.query.id = id
         var resp = new twilio.TwimlResponse();
         var output = []
         var number = parseInt(req.query.Digits)
@@ -240,6 +262,19 @@ var phase4 = {
                 method:"GET"
             });
         return resp.toString();
+    },
+    repeat: function(id){
+        console.log('repeat!', id)
+        TwillioLog.get(id).then(function(item){
+            console.log("got item", row)
+            phase4.makeCall(row)
+
+            res.render('phase4/submit',
+                {  phonenumber: row.phonenumber, delay:  row.delay}
+            )
+            });
+
+
     },
     phase4Destroy: function(){
         TwillioLog.destroy()
@@ -267,6 +302,9 @@ app.get('/phase4', phase4.phase4)
 app.post('/phase4InitFizzBizz',phase4.phase4InitFizzBizz)
 app.get('/submitPhase4', phase4.submitPhase4)
 app.get('/phase4Destroy', phase4.phase4Destroy)
+app.get('/doFizzBuzz4', phase4.doFizzbuzz )
+app.get('/repeat', phase4.repeat )
+
 
 app.listen(app.get('port'), function() {
     console.log("Node app is running at localhost:" + app.get('port'))
